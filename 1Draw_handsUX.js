@@ -3,7 +3,10 @@
 // detectHandGesture(hand) returns "Pinch", "Peace", "Thumbs Up", "Pointing", "Open Palm", or "Fist"
 
 /* load images here */
+let myImage;
+
 function prepareInteraction() {
+myImage = loadImage('/images/taniwha.png');
   //bgImage = loadImage('/images/background.png');
 }
 
@@ -25,8 +28,8 @@ function drawInteraction(faces, hands) {
 
   selectedColor = colors[int(map(Yvalue, 0, height, 0, colors.length))]
 
-  fill(selectedColor)
-  ellipse(width / 2, 100, 50) // shows current colour
+  // fill(selectedColor)
+  // ellipse(width / 2, 100, 50) // shows current colour
 
   // hands part
   // for loop to capture if there is more than one hand on the screen. This applies the same process to all hands.
@@ -39,11 +42,7 @@ function drawInteraction(faces, hands) {
     /*
     Start drawing on the hands here
     */
-    if (hand.handedness === "Left") {
-      Yvalue = hand.index_finger_tip.y; // this will stay as zer untill the program sees a left hand 
-    }
-
-
+   
     if (hand.handedness === "Right") { // draw when pinching right hand 
       let indexFingerTipX = hand.index_finger_tip.x;
       let indexFingerTipY = hand.index_finger_tip.y;
@@ -55,8 +54,13 @@ function drawInteraction(faces, hands) {
 
       let d = dist(indexFingerTipX, indexFingerTipY, thumbTipX, thumbTipY);
 
-      fill(selectedColor)
-      ellipse(x, y, 50)
+      // fill(selectedColor)
+      // ellipse(x, y, 50)
+
+      if (myImage) {
+        imageMode (CORNER);
+        image (myImage, x, y, 500, 500);
+      }
 
       if (d < 50) {
         painting.stroke(selectedColor);

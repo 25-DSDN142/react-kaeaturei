@@ -1,8 +1,13 @@
 // ----=  Faces  =----
 /* load images here */
+let myImage;
+
 function prepareInteraction() {
-  //bgImage = loadImage('/images/background.png');
-}
+
+myImage = loadImage('/images/taniwhaFINAL.png');
+bgImage = loadImage('/images/sea.png');
+  }
+
 
 function drawInteraction(faces, hands) {
 
@@ -10,9 +15,8 @@ function drawInteraction(faces, hands) {
   for (let i = 0; i < faces.length; i++) {
     let face = faces[i]; // face holds all the keypoints of the face\
     console.log(face);
-    if (showKeypoints) {
-      drawPoints(face)
-    }
+    if (showKeypoints) drawPoints(face)
+    
 
     /*
     Once this program has a face, it knows some things about it.
@@ -61,29 +65,32 @@ function drawInteraction(faces, hands) {
 
     let noseTipX = face.keypoints[4].x;
     let noseTipY = face.keypoints[4].y;
+
+    let testX = face.keypoints[10].x;
+    let testY = face.keypoints[10].y;
+
+    let taniwhaX, taniwhaY;
+    let taniwhaWidth, taniwhaHeight;
+
     /*
     Start drawing on the face here
     */
-    noStroke()
-    fill(225, 225, 0);
-    // fill(get(leftEyeCenterX, leftEyeCenterY))
+ //background 
+  imageMode (CORNER);
+  image(bgImage, 0, 0, width, height);
 
-    ellipse(leftEyeCenterX, leftEyeCenterY, leftEyeWidth, leftEyeHeight);
+//image
 
-    drawPoints(face.leftEye);
-    drawPoints(face.leftEyebrow);
-    drawPoints(face.lips);
-    drawPoints(face.rightEye);
-    drawPoints(face.rightEyebrow);
+      taniwhaWidth = faceWidth * 1.5;
+      taniwhaHeight = faceheight * 1.5;
+      taniwhaX = faceCenterX - taniwhaWidth / 2;
+      taniwhaY = faceCenterY - taniwhaHeight / 2;
 
-    // drawX(rightEyeCenterX,rightEyeCenterY);
-    // drawX(leftEyeCenterX,leftEyeCenterY);
-
-
-    // drawX(noseTipX,noseTipY); 
-
-    // drawX(face.keypoints[332].x,face.keypoints[332].y);
-    // drawX(face.keypoints[103].x,face.keypoints[103].y);
+     if (myImage) {
+      
+        imageMode (CORNER);
+        image (myImage, taniwhaX, taniwhaY, taniwhaWidth, taniwhaHeight);
+      }
 
 
     /*
@@ -95,15 +102,17 @@ function drawInteraction(faces, hands) {
   // You can make addtional elements here, but keep the face drawing inside the for loop. 
 }
 
-function drawX(X, Y) {
-  push()
 
-  strokeWeight(15)
-  line(X - 20, Y - 20, X + 20, Y + 20)
-  line(X - 20, Y + 20, X + 20, Y - 20)
 
-  pop()
-}
+// function drawX(X, Y) {
+//   push()
+
+//   strokeWeight(15)
+//   line(X - 20, Y - 20, X + 20, Y + 20)
+//   line(X - 20, Y + 20, X + 20, Y - 20)
+
+//   pop()
+// }
 
 
 // This function draw's a dot on all the keypoints. It can be passed a whole face, or part of one. 
@@ -114,7 +123,7 @@ function drawPoints(feature) {
     let element = feature.keypoints[i];
     noStroke();
     fill(0, 255, 0);
-    circle(element.x, element.y, 5);
+    rect(element.x, element.y, 5);
   }
   pop()
 
