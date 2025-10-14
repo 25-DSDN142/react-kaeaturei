@@ -1,19 +1,35 @@
 // ----=  Faces  =----
 /* load images here */
-let myImage;
+let TaniwhaRed;
+let TaniwhaBlue;
+let currentImage;
+let bgImage;
+let bubbles;
+let BubblesHide;
 
 function prepareInteraction() {
 
-myImage = loadImage('/images/taniwhaFINAL.png');
+TaniwhaRed = loadImage('/images/taniwhaFINAL.png');
+TaniwhaBlue = loadImage ('/images/taniwhaFINALBLUE.png');
 bgImage = loadImage('/images/sea.png');
+currentImage = TaniwhaRed;
+
+bubbles = loadImage ('images/bubbles.png');
+BubblesHide = flase;
   }
 
 
 function drawInteraction(faces, hands) {
+  
+   //background under the sea
+  imageMode (CORNER);
+  image(bgImage, 0, 0, width, height);
+
 
   // for loop to capture if there is more than one face on the screen. This applies the same process to all faces. 
   for (let i = 0; i < faces.length; i++) {
     let face = faces[i]; // face holds all the keypoints of the face\
+    
     console.log(face);
     if (showKeypoints) drawPoints(face)
     
@@ -75,22 +91,33 @@ function drawInteraction(faces, hands) {
     /*
     Start drawing on the face here
     */
- //background 
-  imageMode (CORNER);
-  image(bgImage, 0, 0, width, height);
 
-//image
+
+  //image of taniwha on face
 
       taniwhaWidth = faceWidth * 1.5;
       taniwhaHeight = faceheight * 1.5;
       taniwhaX = faceCenterX - taniwhaWidth / 2;
       taniwhaY = faceCenterY - taniwhaHeight / 2;
 
-     if (myImage) {
+    //  if (TaniwhaRed) {
       
-        imageMode (CORNER);
-        image (myImage, taniwhaX, taniwhaY, taniwhaWidth, taniwhaHeight);
-      }
+    //     imageMode (CORNER);
+    //     image (TaniwhaRed, taniwhaX, taniwhaY, taniwhaWidth, taniwhaHeight);
+    //   }
+
+      if (currentImage) {
+      imageMode(CORNER);
+      image(currentImage, taniwhaX, taniwhaY, taniwhaWidth, taniwhaHeight);
+    }
+
+    if (bubbles) {;
+    imageMode(CORNER);
+    image(bubbles, face.lips.centerX, face.lips.centerY, face.lips.width, face.lips.height);
+
+    }
+
+
 
 
     /*
@@ -101,6 +128,16 @@ function drawInteraction(faces, hands) {
   //------------------------------------------------------
   // You can make addtional elements here, but keep the face drawing inside the for loop. 
 }
+
+// Switch image when key pressed
+function keyPressed() {
+  if (key === '1') {
+    currentImage = TaniwhaRed;
+  } else if (key === '2') {
+    currentImage = TaniwhaBlue;
+  }
+}
+
 
 
 
