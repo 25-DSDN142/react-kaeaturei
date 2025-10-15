@@ -10,32 +10,36 @@ let bubbleAway = 0;
 
 function prepareInteraction() {
 
-TaniwhaRed = loadImage('/images/taniwhaFINAL.png');
-TaniwhaBlue = loadImage ('/images/taniwhaFINALBLUE.png');
-bgImage = loadImage('/images/sea.png');
-currentImage = TaniwhaRed;
+  //loaded in images
 
-bubbles = loadImage ('images/bubbles.png');
-BubblesHide = false;
-  }
+  TaniwhaRed = loadImage('/images/taniwhaFINAL.png');
+  TaniwhaBlue = loadImage('/images/taniwhaFINALBLUE.png');
+  currentImage = TaniwhaRed;
+
+  bgImage = loadImage('/images/sea.png');
+  
+  bubbles = loadImage('images/bubbles.png');
+
+}
 
 
 function drawInteraction(faces, hands) {
-  
-   //background under the sea
-  imageMode (CORNER);
+
+  //background under the sea
+  imageMode(CORNER); //corner worked best for me 
   image(bgImage, 0, 0, width, height);
 
 
   // for loop to capture if there is more than one face on the screen. This applies the same process to all faces. 
   for (let i = 0; i < faces.length; i++) {
     let face = faces[i]; // face holds all the keypoints of the face\
-    
+
     console.log(face);
     if (showKeypoints) drawPoints(face)
-    
-    let noseTipX = face.keypoints[4].x;
-    let noseTipY = face.keypoints[4].y;
+
+    //nose but I changed the key point
+    let taniwhaMouthX = face.keypoints[100].x;
+    let taniwhaMouthY = face.keypoints[100].y;
 
     //mouth
     let lipsCenterX = face.lips.centerX;
@@ -43,11 +47,12 @@ function drawInteraction(faces, hands) {
     let lipsWidth = face.lips.width;
     let lipsHeight = face.lips.height;
 
-    let expression = detectFaceExpression (face);
+    let expression = detectFaceExpression(face); //open mouth suprised express
 
-    if (expression === "Surprised") {
-      bubbleAway = lerp(bubbleAway, 255, 0.1);
-      createBubble (noseTipX, noseTipY);
+    // Bubbles
+    if (expression === "Surprised") { //mouth open
+      bubbleAway = lerp(bubbleAway, 255, 0.1); //this is for the fade effect
+      createBubble(taniwhaMouthX, taniwhaMouthY); //and where they are going to go
     } else {
       bubbleAway = lerp(bubbleAway, 0, 0.1);
     }
@@ -68,6 +73,8 @@ function drawInteraction(faces, hands) {
     let faceCenterY = face.faceOval.centerY;
     let faceWidth = face.faceOval.width;
     let faceheight = face.faceOval.height;
+    
+    //I didn;
     // Left eye
     let leftEyeCenterX = face.leftEye.centerX;
     let leftEyeCenterY = face.leftEye.centerY;
@@ -91,11 +98,10 @@ function drawInteraction(faces, hands) {
     let rightEyebrowWidth = face.rightEyebrow.width;
     let rightEyebrowHeight = face.rightEyebrow.height;
 
-    
-
     let testX = face.keypoints[10].x;
     let testY = face.keypoints[10].y;
 
+    // Taniwha variables
     let taniwhaX, taniwhaY;
     let taniwhaWidth, taniwhaHeight;
 
@@ -104,45 +110,35 @@ function drawInteraction(faces, hands) {
     */
 
 
-  //image of taniwha on face
+    //image of taniwha and making it connect to my face
+    taniwhaWidth = face.faceOval.width * 1.5;
+    taniwhaHeight = face.faceOval.height * 1.5;
+    taniwhaX = face.faceOval.centerX - taniwhaWidth / 2;
+    taniwhaY = face.faceOval.centerY - taniwhaHeight / 2;
 
-taniwhaWidth = face.faceOval.width * 1.5;
-taniwhaHeight = face.faceOval.height * 1.5;
-taniwhaX = face.faceOval.centerX - taniwhaWidth / 2;
-taniwhaY = face.faceOval.centerY - taniwhaHeight / 2;
-
-    //  if (TaniwhaRed) {
-      
-    //     imageMode (CORNER);
-    //     image (TaniwhaRed, taniwhaX, taniwhaY, taniwhaWidth, taniwhaHeight);
-    //   }
-
-      if (currentImage) {
+    if (currentImage) {
       imageMode(CORNER);
       image(currentImage, taniwhaX, taniwhaY, taniwhaWidth, taniwhaHeight);
     }
 
-    updateAndDrawBubbles ();
-
-    }
-
-
-
-
-    /*
-    Stop drawing on the face here
-    */
+    updateAndDrawBubbles(); // for bubble code
 
   }
-  //------------------------------------------------------
-  // You can make addtional elements here, but keep the face drawing inside the for loop. 
+
+  /*
+  Stop drawing on the face here
+  */
+
+}
+//------------------------------------------------------
+// You can make addtional elements here, but keep the face drawing inside the for loop. 
 
 // Switch image when key pressed
 function keyPressed() {
   if (key === '1') {
-    currentImage = TaniwhaRed;
+    currentImage = TaniwhaRed; //will start on the red taniwha
   } else if (key === '2') {
-    currentImage = TaniwhaBlue;
+    currentImage = TaniwhaBlue; // if key is pressed with change to blue taniwha
   }
 }
 
@@ -151,7 +147,7 @@ function createBubble(x, y) {
     bubbleAppear.push({
       x: x + random(-20, 20),
       y: y + random(-10, 10),
-      size: random(100, 160),
+      size: random(100, 160), //use this to change the size
       speed: random(0.5, 1.5),
       away: 255
     });
@@ -162,7 +158,7 @@ function updateAndDrawBubbles() {
   for (let i = bubbleAppear.length - 1; i >= 0; i--) {
     let b = bubbleAppear[i];
     b.y -= b.speed; // float up
-    b.away -= 2;   // fade
+    b.away -= 2; // fade
 
     if (bubbles) {
       tint(255, bubbleAway * (b.away / 255)); // apply fade
